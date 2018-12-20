@@ -1,0 +1,152 @@
+/**
+ *
+ * @licstart  The following is the entire license notice for the JavaScript code in this file.
+ *
+ * AI modules for Melinda's applications
+ *
+ * Copyright (c) 2017-2018 University Of Helsinki (The National Library Of Finland)
+ *
+ * This file is part of melinda-ai-commons-js
+ *
+ * melinda-ai-commons-js is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * melinda-ai-commons-js is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @licend  The above is the entire license notice
+ * for the JavaScript code in this page.
+ *
+ **/
+
+import {expect} from 'chai';
+import {MarcRecord} from '@natlibfi/marc-record';
+import {Extractors, Normalizers} from './extractors';
+import {generateFeatures, generateFeatureVector, normalizeFeatureVectors} from './index';
+
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+const defaultTestRecord = new MarcRecord({
+	leader: '00000cam^a22003017i^4500',
+	fields: [{tag: 'FOO', value: 'bar'}]
+});
+
+describe('preference', () => {
+	describe('generateFeatureVector', () => {
+		function setEncodingLevel(record, newLevel) {
+			record.leader = record.leader.substr(0, 17) + newLevel + record.leader.substr(17 + newLevel.length);
+		}
+
+		const testRecord = MarcRecord.fromString(`LDR    00000cam^a22003017i^4500
+005    20141219114925.0
+008    850506s1983^^^^xxu|||||||||||||||||eng||
+CAT    ‡aLOAD-HELKA‡b‡c20140812‡lFIN01‡h2333
+CAT    ‡aLOAD-HELKA‡b‡c20111215‡lFIN01‡h0529
+CAT    ‡aLOAD-FIX‡b30‡c20141219‡lFIN01‡h1145
+CAT    ‡aCONV-ISBD‡b‡c20120401‡lFIN01‡h2007
+CAT    ‡aKVP1008‡b30‡c20131219‡lFIN01
+CAT    ‡aKVP1008‡b30‡c20131215‡lFIN01
+LOW    ‡aFENNI
+SID    ‡bviola
+500    ‡aORG_X`);
+
+		const otherTestRecord = new MarcRecord(defaultTestRecord);
+		otherTestRecord.appendField(['005', '20131219114925.0']);
+		otherTestRecord.appendField(['008', '870506s1983^^^^xxu|||||||||||||||||eng||']);
+
+		setEncodingLevel(otherTestRecord, 'u');
+		setEncodingLevel(testRecord, '^');
+
+		it('should generate proper feature vector', () => {
+			const featureArray = [
+				{encodingLevel: [Extractors.encodingLevel]},
+				{catalogingSourceFrom008: [Extractors.catalogingSourceFrom008]},
+				{recordAge: [Extractors.recordAge]},
+				{localOwnerCount: [Extractors.localOwnerCount]},
+				{latestChange: [Extractors.latestChange()]},
+				{FENNI: [Extractors.specificLocalOwner('FENNI')]},
+				{VIOLA: [Extractors.specificLocalOwner('VIOLA')]}
+			];
+
+			const vector = generateFeatureVector(generateFeatures(testRecord, featureArray));
+
+			expect(vector).to.have.length(7);
+			expect(vector).to.eql([4, 0, '850506', 2, '201412191145', 1, 1]);
+		});
+
+		it('should generate proper normalized vectors', () => {
+			const featureArray = [
+				{encodingLevel: [Extractors.encodingLevel, Normalizers.notNull]},
+				{recordAge: [Extractors.recordAge, Normalizers.lexical]},
+				{latestChange: [Extractors.latestChange(), Normalizers.lexical]}
+			];
+
+			const vector1 = generateFeatureVector(generateFeatures(testRecord, featureArray));
+			const vector2 = generateFeatureVector(generateFeatures(otherTestRecord, featureArray));
+
+			expect(vector1).to.have.length(3);
+			expect(vector1).to.eql([4, '850506', '201412191145']);
+
+			expect(vector2).to.have.length(3);
+			expect(vector2).to.eql([0, '870506', '201312191149']);
+
+			normalizeFeatureVectors(vector1, vector2, featureArray);
+
+			expect(vector1).to.have.length(3);
+			expect(vector1).to.eql([0, 0, 1]);
+
+			expect(vector2).to.have.length(3);
+			expect(vector2).to.eql([0, 1, 0]);
+		});
+
+		it('should handle invert normalizer correctly', () => {
+			const vector1 = [0];
+			const vector2 = [1];
+			normalizeFeatureVectors(vector1, vector2, [{fakeFeature: [null, Normalizers.invert]}]);
+			expect(vector1).to.eql([1]);
+			expect(vector2).to.eql([0]);
+		});
+
+		describe('reprint normalizer', () => {
+			let record1;
+			let record2;
+
+			let reprintVector1;
+			let reprintVector2;
+
+			let fakeExtractorSet;
+
+			beforeEach(() => {
+				record1 = new MarcRecord(defaultTestRecord);
+				record2 = new MarcRecord(defaultTestRecord);
+
+				record1.appendField(['008', '860819s1975^^^^sw^|||||||||||||||||rus||']);
+				record1.appendField(['500', '', '', 'a', 'Lisäpainokset: Repr. 1982.']);
+
+				record2.appendField(['008', '860819s1982^^^^sw^|||||||||||||||||rus||']);
+
+				reprintVector1 = [Extractors.reprintInfo(record1)];
+				reprintVector2 = [Extractors.reprintInfo(record2)];
+
+				fakeExtractorSet = [{fakeFeature: [null, Normalizers.reprint]}];
+			});
+
+			it('should give points to earlier record with reprint info that contains the year of the latter record.', () => {
+				normalizeFeatureVectors(reprintVector1, reprintVector2, fakeExtractorSet);
+				expect(reprintVector1[0]).to.equal(1);
+			});
+
+			it('should not give points to latter record if earlier record has reprint info that contains the year of the latter record.', () => {
+				normalizeFeatureVectors(reprintVector1, reprintVector2, fakeExtractorSet);
+				expect(reprintVector2[0]).to.equal(0);
+			});
+		});
+	});
+});

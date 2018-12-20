@@ -1,0 +1,22 @@
+[
+    {
+        "leader": "00995cam a22003017i 4500",
+		"fields": [
+			{"tag": "001", "value": "000000627"},
+			{"tag": "005", "value": "20150306135636.0"},
+			{"tag": "008", "value": "870423s1978    sw ||||||d   |||||||swe||"},
+			{"tag": "020", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "951-35-1137-5"}]},
+			{"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "foobar"}]}
+		]
+	},
+	{
+		"leader": "00995cam a22003017i 4500",
+		"fields": [
+			{"tag": "001", "value": "000000628"},
+			{"tag": "005", "value": "20150306135636.0"},
+			{"tag": "008", "value": "870423s1978    sw ||||||d   |||||||swe||"},
+			{"tag": "020", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "951-35-1137-5"}]},
+			{"tag": "245", "ind1": " ", "ind2": " ", "subfields": [{"code": "a", "value": "foobar"}]}
+		]
+	}
+]
