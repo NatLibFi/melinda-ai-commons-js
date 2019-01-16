@@ -41,13 +41,15 @@ const Utils = require('./utils');
 
 const createExtractor = require('./feature-F362');
 
-describe('feature-F362', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/feature-F362', () => {
 	let record1;
 	let record2;
 
 	beforeEach(() => {
-		record1 = new MarcRecord();
-		record2 = new MarcRecord();
+		record1 = new MarcRecord({fields: [{tag: '001', value: '12345'}]});
+		record2 = new MarcRecord({fields: [{tag: '001', value: '67890'}]});
 	});
 
 	function primeRecords(strForRec1, strForRec2) {
@@ -159,6 +161,7 @@ function toWeirdFormat(record) {
 			_: field.value
 		};
 	}
+
 	function convertDataField(field) {
 		return {
 			$: {

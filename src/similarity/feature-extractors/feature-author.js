@@ -128,10 +128,12 @@ function author(record1, record2) {
 					const copy = used.slice();
 					permutations.push(copy);
 				}
+
 				generateFrom(set);
 				set.splice(i, 0, item);
 				used.pop();
 			}
+
 			return permutations;
 		}
 
@@ -205,6 +207,7 @@ function author(record1, record2) {
 			debug('isIdentical lvComparator.75');
 			return Labels.ALMOST_SURE;
 		}
+
 		// If other set is subset of the other with small lv-distance, then we are sure
 		if (compareFuncs.isSubset(set1, set2, compareFuncs.lvComparator(0.75)) ||
       compareFuncs.isSubset(set2, set1, compareFuncs.lvComparator(0.75))) {

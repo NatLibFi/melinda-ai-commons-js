@@ -41,7 +41,7 @@ function gf(value) {
 	}];
 }
 
-describe('Normalize functions', () => {
+describe('similarity/feature-extractors/normalize functions', () => {
 	// The field mocks have all other data left out, so there is only subfields.
 	const testFields = [{
 		subfield: [

@@ -38,10 +38,13 @@ const {SURE, SURELY_NOT, ABSOLUTELY_NOT_DOUBLE} = Labels;
 
 const {MarcRecord} = require('@natlibfi/marc-record');
 const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const F337_F338 = require('./feature-F337-F338');
 
-describe('F337_F338', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/F337_F338', () => {
 	let record1;
 	let record2;
 
@@ -54,7 +57,7 @@ describe('F337_F338', () => {
 	});
 
 	function runExtractor() {
-		const extractor = F337_F338(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F337_F338(toxmljsFormat(record1), toxmljsFormat(record2));
 		return extractor.check();
 	}
 

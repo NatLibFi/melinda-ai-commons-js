@@ -31,7 +31,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const {moreRecent} = require('./normalizers');
 
-describe('normalizers', () => {
+describe('preference/normalizers', () => {
 	describe('moreRecent', () => {
 		describe('when both records are quite recent', () => {
 			it('should return 0 if records are equally recent', () => {

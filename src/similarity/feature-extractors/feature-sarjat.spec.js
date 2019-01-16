@@ -37,7 +37,9 @@ const Utils = require('./utils');
 const {Labels} = require('./constants');
 const sarjat = require('./feature-sarjat');
 
-describe('feature-sarjat', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/feature-sarjat', () => {
 	let record1;
 	let record2;
 
@@ -145,6 +147,7 @@ function toWeirdFormat(record) {
 			_: field.value
 		};
 	}
+
 	function convertDataField(field) {
 		return {
 			$: {

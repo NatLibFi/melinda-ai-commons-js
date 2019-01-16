@@ -48,6 +48,7 @@ const compareNumbers = allowedDiff => (numA, numB) => {
 		const percentDiff = (parseInt(allowedDiff, 10) + 100) / 100;
 		return Math.max(numA, numB) / Math.min(numA, numB) <= percentDiff;
 	}
+
 	return Math.abs(numA - numB) <= allowedDiff;
 };
 
@@ -88,9 +89,11 @@ const forMissingFeature = (labelIfEitherIsMissingFeature, comparator) => (itemA,
 	if (containsData(itemA) && containsData(itemB)) {
 		return comparator(itemA, itemB);
 	}
+
 	if (containsData(itemA) || containsData(itemB)) {
 		return labelIfEitherIsMissingFeature;
 	}
+
 	return null;
 };
 
@@ -107,6 +110,7 @@ function compareCounts(a, b) {
 	if (a === null && b === null) {
 		return null;
 	}
+
 	const norm = val => val === null ? 1 : val;
 
 	return norm(a) === norm(b);

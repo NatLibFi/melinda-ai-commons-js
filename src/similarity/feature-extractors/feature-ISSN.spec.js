@@ -35,10 +35,13 @@ const expect = chai.expect;
 const {Labels} = require('./constants');
 const {MarcRecord} = require('@natlibfi/marc-record');
 const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const ISSN = require('./feature-ISSN');
 
-describe('ISSN', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/ISSN', () => {
 	let record1;
 	let record2;
 
@@ -56,7 +59,7 @@ describe('ISSN', () => {
 		it('should return null if either is missing ISSN', () => {
 			record1.appendField(Utils.stringToField('022    ‡a1022-9299'));
 
-			const extractor = ISSN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISSN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(null);
@@ -66,7 +69,7 @@ describe('ISSN', () => {
 			record1.appendField(Utils.stringToField('022    ‡a1022-9299'));
 			record2.appendField(Utils.stringToField('022    ‡a1022-9299'));
 
-			const extractor = ISSN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISSN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.SURE);
@@ -76,7 +79,7 @@ describe('ISSN', () => {
 			record1.appendField(Utils.stringToField('022    ‡a1022-9299'));
 			record2.appendField(Utils.stringToField('022    ‡a1029-8649‡y1022-9299'));
 
-			const extractor = ISSN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISSN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.SURE);

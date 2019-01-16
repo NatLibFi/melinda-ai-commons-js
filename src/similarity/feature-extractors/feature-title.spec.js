@@ -28,16 +28,15 @@
 
 /* eslint-disable no-unused-expressions */
 
-const chai = require('chai');
+import {expect} from 'chai';
+import {MarcRecord} from '@natlibfi/marc-record';
+import * as Utils from './utils';
+import {Labels} from './constants';
+import title from './feature-title';
 
-const expect = chai.expect;
-const {MarcRecord} = require('@natlibfi/marc-record');
+MarcRecord.setValidationOptions({subfieldValues: false});
 
-const Utils = require('./utils');
-const {Labels} = require('./constants');
-const title = require('./feature-title');
-
-describe('title', () => {
+describe('similarity/feature-extractors/title', () => {
 	let record1;
 	let record2;
 
@@ -268,39 +267,40 @@ describe('title', () => {
 			expect(runExtractor()).to.equal(Labels.SURE);
 		});
 	});
-});
 
-function toWeirdFormat(record) {
-	return {
-		controlfield: record.getControlfields().map(convertControlField),
-		datafield: record.getDatafields().map(convertDataField)
-	};
-
-	function convertControlField(field) {
+	function toWeirdFormat(record) {
 		return {
-			$: {
-				tag: field.tag
-			},
-			_: field.value
-		};
-	}
-	function convertDataField(field) {
-		return {
-			$: {
-				tag: field.tag,
-				ind1: field.ind1,
-				ind2: field.ind2
-			},
-			subfield: field.subfields.map(convertSubfield)
+			controlfield: record.getControlfields().map(convertControlField),
+			datafield: record.getDatafields().map(convertDataField)
 		};
 
-		function convertSubfield(subfield) {
+		function convertControlField(field) {
 			return {
 				$: {
-					code: subfield.code
+					tag: field.tag
 				},
-				_: subfield.value
+				_: field.value
 			};
 		}
+
+		function convertDataField(field) {
+			return {
+				$: {
+					tag: field.tag,
+					ind1: field.ind1,
+					ind2: field.ind2
+				},
+				subfield: field.subfields.map(convertSubfield)
+			};
+
+			function convertSubfield(subfield) {
+				return {
+					$: {
+						code: subfield.code
+					},
+					_: subfield.value
+				};
+			}
+		}
 	}
-}
+});

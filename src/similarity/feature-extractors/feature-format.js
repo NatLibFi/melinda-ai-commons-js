@@ -39,6 +39,11 @@ function format(record1, record2) {
 
 	const formatNames = ['BK', 'CR', 'MP', 'MU', 'CF', 'MX', 'VM'];
 
+	return {
+		check,
+		names: formatNames.map(name => `format-${name}`)
+	};
+
 	function check() {
 		if (formatA === undefined || formatB === undefined) {
 			return formatNames.map(() => null);
@@ -52,11 +57,6 @@ function format(record1, record2) {
 			return format === formatA ? Labels.SURE : Labels.SURELY_NOT;
 		});
 	}
-
-	return {
-		check,
-		names: formatNames.map(name => `format-${name}`)
-	};
 }
 
 module.exports = format;

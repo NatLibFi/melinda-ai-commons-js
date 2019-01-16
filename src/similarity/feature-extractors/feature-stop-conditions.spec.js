@@ -26,20 +26,18 @@
  *
  **/
 
-const chai = require('chai');
-
-const expect = chai.expect;
-
-const {Labels} = require('./constants');
+import {expect} from 'chai';
+import {MarcRecord} from '@natlibfi/marc-record';
+import {Labels} from './constants';
+import * as Utils from './utils';
+import {toxmljsFormat} from '../utils';
+import stopConditions from './feature-stop-conditions';
 
 const {ABSOLUTELY_NOT_DOUBLE} = Labels;
 
-const {MarcRecord} = require('@natlibfi/marc-record');
-const Utils = require('./utils');
+MarcRecord.setValidationOptions({subfieldValues: false});
 
-const stopConditions = require('./feature-stop-conditions');
-
-describe('stop conditions', () => {
+describe('similarity/feature-extractors/stop conditions', () => {
 	let record1;
 	let record2;
 
@@ -52,7 +50,7 @@ describe('stop conditions', () => {
 	});
 
 	function runExtractor() {
-		const extractor = stopConditions(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = stopConditions(toxmljsFormat(record1), toxmljsFormat(record2));
 		return extractor.check();
 	}
 

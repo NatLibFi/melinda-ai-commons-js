@@ -93,6 +93,7 @@ function featureVectorToInputVector(featureVector) {
 
 			return (featureVector[key] * 2) - 1;
 		}
+
 		return 0;
 	});
 

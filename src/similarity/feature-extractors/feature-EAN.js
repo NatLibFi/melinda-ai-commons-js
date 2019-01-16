@@ -56,4 +56,5 @@ function EAN(record1, record2) {
 		getData
 	};
 }
+
 module.exports = EAN;

@@ -26,8 +26,6 @@
  *
  **/
 
-import * as Service from './service';
-
+export * from './service';
 export * from './utils';
 export {ExtractorPresets} from './extractors';
-export {Service};

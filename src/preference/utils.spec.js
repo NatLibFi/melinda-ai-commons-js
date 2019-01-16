@@ -29,7 +29,7 @@
 import {expect} from 'chai';
 import {MarcRecord} from '@natlibfi/marc-record';
 import {Extractors, Normalizers} from './extractors';
-import {generateFeatures, generateFeatureVector, normalizeFeatureVectors} from './index';
+import {generateFeatures, generateFeatureVector, normalizeFeatureVectors} from './utils';
 
 MarcRecord.setValidationOptions({subfieldValues: false});
 
@@ -38,7 +38,7 @@ const defaultTestRecord = new MarcRecord({
 	fields: [{tag: 'FOO', value: 'bar'}]
 });
 
-describe('preference', () => {
+describe('preference/utils', () => {
 	describe('generateFeatureVector', () => {
 		function setEncodingLevel(record, newLevel) {
 			record.leader = record.leader.substr(0, 17) + newLevel + record.leader.substr(17 + newLevel.length);

@@ -27,7 +27,6 @@
 */
 
 import * as Strategies from './strategy';
-
 export * from './service';
 export * from './utils';
 export {Strategies};

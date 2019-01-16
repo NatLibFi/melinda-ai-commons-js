@@ -100,6 +100,7 @@ function F008(record1, record2) {
 							if (valueIsMissing(a) || valueIsMissing(b)) {
 								return null;
 							}
+
 							return a === b ? 1 : 0;
 						});
 
@@ -107,12 +108,14 @@ function F008(record1, record2) {
 
 						return labelsWithValue.length > 0 ? _.mean(labelsWithValue) : null;
 					}
+
 					if (valueIsMissing(item1) || valueIsMissing(item2)) {
 						return null;
 					}
 
 					return item1 === item2 ? Labels.SURE : Labels.SURELY_NOT;
 				}
+
 				return null;
 			});
 	}

@@ -35,24 +35,30 @@ const {Labels} = require('./constants');
 const {SURE, SURELY_NOT, ABSOLUTELY_NOT_DOUBLE} = Labels;
 
 const {MarcRecord} = require('@natlibfi/marc-record');
-const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const format = require('./feature-format');
 
-describe('format', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/format', () => {
 	let record1;
 	let record2;
 
 	beforeEach(() => {
-		record1 = new MarcRecord();
-		record2 = new MarcRecord();
+		record1 = new MarcRecord({
+			leader: '^^^^^ccm^a22004934i^4500',
+			fields: [{tag: '001', value: '12345'}]
+		});
 
-		record1.leader = '^^^^^ccm^a22004934i^4500';
-		record2.leader = '^^^^^ccm^a22004934i^4500';
+		record2 = new MarcRecord({
+			leader: '^^^^^ccm^a22004934i^4500',
+			fields: [{tag: '001', value: '56780'}]
+		});
 	});
 
 	function runExtractor() {
-		const extractor = format(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = format(toxmljsFormat(record1), toxmljsFormat(record2));
 		return extractor.check();
 	}
 

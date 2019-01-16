@@ -36,23 +36,29 @@ const {SURE, SURELY_NOT, ALMOST_SURE} = Labels;
 
 const {MarcRecord} = require('@natlibfi/marc-record');
 const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const subjectAccessTerms = require('./feature-subject-access-terms');
 
-describe('subjectAccessTerms', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/subjectAccessTerms', () => {
 	let record1;
 	let record2;
 
 	beforeEach(() => {
-		record1 = new MarcRecord();
-		record2 = new MarcRecord();
-
-		record1.leader = '^^^^^ccm^a22004934i^4500';
-		record2.leader = '^^^^^ccm^a22004934i^4500';
+		record1 = new MarcRecord({
+			leader: '^^^^^ccm^a22004934i^4500',
+			fields: [{tag: '001', value: '12345'}]}
+		);
+		record2 = new MarcRecord({
+			leader: '^^^^^ccm^a22004934i^4500',
+			fields: [{tag: '001', value: '56780'}]
+		});
 	});
 
 	function runExtractor() {
-		const extractor = subjectAccessTerms(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = subjectAccessTerms(toxmljsFormat(record1), toxmljsFormat(record2));
 		return extractor.check();
 	}
 

@@ -70,6 +70,7 @@ function reprint(record1, record2) {
 		if (set1_f250a === set2_f250a) {
 			return Labels.SURE;
 		}
+
 		const set1_f300a = getField(set1, '300a');
 		const set2_f300a = getField(set2, '300a');
 

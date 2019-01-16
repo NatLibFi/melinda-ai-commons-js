@@ -36,10 +36,13 @@ const {SURE, SURELY_NOT, ALMOST_SURE} = Labels;
 
 const {MarcRecord} = require('@natlibfi/marc-record');
 const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const author245c = require('./feature-author245c');
 
-describe('author245c', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/author245c', () => {
 	let record1;
 	let record2;
 
@@ -51,7 +54,7 @@ describe('author245c', () => {
 	});
 
 	it('should return null if field is missing 245c', () => {
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const label = extractor.check();
 
 		expect(label).to.equal(null);
@@ -65,7 +68,7 @@ describe('author245c', () => {
 			'245 10 ‡aSidosryhmät ja riski pörssiyhtiössä /‡cTimo Kaisanlahti.'
 		));
 
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql(SURE);
@@ -79,7 +82,7 @@ describe('author245c', () => {
 			'245 10 ‡aSidosryhmät ja riski pörssiyhtiössä /‡cTimo Kaisanlahti.'
 		));
 
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql(ALMOST_SURE);
@@ -93,7 +96,7 @@ describe('author245c', () => {
 			'245 10 ‡aSidosryhmät ja riski pörssiyhtiössä /‡ctoim. Kullervo'
 		));
 
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql(ALMOST_SURE);
@@ -107,7 +110,7 @@ describe('author245c', () => {
 			'245 14 ‡aThe prophet armed :‡bTrotsky: 1879-1921 /‡cI. Deutscher.'
 		));
 
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql(SURE);
@@ -121,7 +124,7 @@ describe('author245c', () => {
 			'245 10 ‡aSprachherkunftsforschung.‡n1,‡pEinleitung und Phonogenese/Paläophonetik /‡cGuyla Décsy.'
 		));
 
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql(SURE);
@@ -135,7 +138,7 @@ describe('author245c', () => {
 			'245 00 ‡aVanhojen mestarien hartaita lauluja. ‡csovittanut John Sundberg.'
 		));
 
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql(ALMOST_SURE);
@@ -149,7 +152,7 @@ describe('author245c', () => {
 			'245 10 ‡aSprachherkunftsforschung.‡n1,‡pEinleitung und Phonogenese/Paläophonetik /‡cGuyla Décsy.'
 		));
 
-		const extractor = author245c(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = author245c(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql(SURELY_NOT);

@@ -45,6 +45,7 @@ export function singleNormalize(options) {
 		if (_.isFunction(normalizer)) {
 			return normalizer.call(this, param, options);
 		}
+
 		if (_.isString(normalizer)) {
 			const func = eval(`normalizeFuncs.${normalizer}`);
 			return func.call(this, param, options);
@@ -56,6 +57,7 @@ export function compare(comparator, param1, param2) {
 	if (_.isFunction(comparator)) {
 		return comparator.call(this, param1, param2);
 	}
+
 	if (_.isString(comparator)) {
 		const func = eval(`compareFuncs.${comparator}`);
 		return func.call(this, param1, param2);
@@ -109,6 +111,7 @@ export function getSubfield(field, code) {
 	if (subfields.length > 1) {
 		throw new Error('Record has multiple subfields of code: ' + code);
 	}
+
 	return subfields[0];
 }
 
@@ -126,6 +129,7 @@ export function fieldToString(field) {
 		const subfields = field.subfields.map(subfield => `‡${subfield.code}${subfield.value}`).join('');
 		return `${field.tag} ${ind1}${ind2} ${subfields}`;
 	}
+
 	return `${field.tag}    ${field.value}`;
 }
 
@@ -135,6 +139,7 @@ export function stringToField(fieldStr) {
 		const value = fieldStr.substr(7);
 		return {tag, value};
 	}
+
 	const ind1 = fieldStr.substr(4, 1);
 	const ind2 = fieldStr.substr(5, 1);
 	const subfieldsStr = fieldStr.substr(6);
@@ -189,6 +194,7 @@ export function convertToISBN13(isbn) {
 	if (isbn === undefined || isbn.length !== 10) {
 		return isbn;
 	}
+
 	return addISBN13CheckDigit('978' + isbn.substring(0, 9));
 }
 
@@ -214,6 +220,7 @@ export function addISBN13CheckDigit(isbn) {
 	if (checkDigit === 10) {
 		checkDigit = 0;
 	}
+
 	isbn += checkDigit;
 
 	return isbn;
@@ -299,9 +306,11 @@ export function getField(set, selector) {
 		//    Console.log('\nWarning: has multiple ' + selector + ':');
 
 	}
+
 	if (fields.length === 0) {
 		return undefined;
 	}
+
 	const ret = clone(fields[0]);
 
 	ret.subfield = ret.subfield.filter(subfield => {
@@ -311,9 +320,11 @@ export function getField(set, selector) {
 	if (ret.subfield.length > 1) {
 		throw new Error('field has multiple subfields of ' + selector);
 	}
+
 	if (ret.subfield.length === 0) {
 		return undefined;
 	}
+
 	return ret.subfield[0]._;
 }
 
@@ -380,7 +391,7 @@ export function extractFormat(record) {
 		case isCF(l6): return 'CF';
 		case isMX(l6): return 'MX';
 		case isVM(l6): return 'VM';
-		default: throw new Error();
+		default:
 	}
 }
 
@@ -466,6 +477,7 @@ export function selectPublicationYear(record) {
 	if (normalizedYears.length === 0) {
 		return 9999;
 	}
+
 	return _.max(normalizedYears);
 }
 
@@ -474,6 +486,7 @@ export const flattenFields = fields => _.flatMap(fields, field => {
 	if (field.subfields) {
 		return field.subfields.map(sub => Object.assign({}, sub, {tag: field.tag}));
 	}
+
 	return field;
 });
 
@@ -486,9 +499,11 @@ export function isYear(param) {
 		if (param.length !== 4) {
 			return false;
 		}
+
 		if (isNaN(param)) {
 			return false;
 		}
+
 		number = parseInt(param, 10);
 	} else {
 		number = param;
@@ -507,8 +522,10 @@ export const forMissingFeature = (labelIfEitherIsMissingFeature, comparator) => 
 	if (containsData(itemA) && containsData(itemB)) {
 		return comparator(itemA, itemB);
 	}
+
 	if (containsData(itemA) || containsData(itemB)) {
 		return labelIfEitherIsMissingFeature;
 	}
+
 	return null;
 };

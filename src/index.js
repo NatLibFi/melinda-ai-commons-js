@@ -26,6 +26,11 @@
 *
 */
 
+import {MarcRecord} from '@natlibfi/marc-record';
+
+// Aleph creates partial subfields...
+MarcRecord.setValidationOptions({subfieldValues: false});
+
 import * as Models from './model';
 import * as Similarity from './similarity';
 import * as Preference from './preference';

@@ -55,6 +55,7 @@ export default function (record1, record2) {
 	if (rec1_008 === undefined) {
 		throw new Error('Record is missing field 008');
 	}
+
 	if (rec2_008 === undefined) {
 		throw new Error('Record is missing field 008');
 	}
@@ -90,6 +91,7 @@ export default function (record1, record2) {
 		const equalFunc = function (a, b) {
 			return a === b;
 		};
+
 		equalFunc.options = {nosubcode: true};
 
 		if (compareFuncs.isSubset(set1, set2, equalFunc) || compareFuncs.isSubset(set2, set1, equalFunc)) {

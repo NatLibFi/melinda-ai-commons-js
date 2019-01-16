@@ -35,10 +35,13 @@ const expect = chai.expect;
 const {Labels} = require('./constants');
 const {MarcRecord} = require('@natlibfi/marc-record');
 const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const F007 = require('./feature-F007');
 
-describe('F007', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/F007', () => {
 	let record1;
 	let record2;
 
@@ -51,7 +54,7 @@ describe('F007', () => {
 	});
 
 	it('should return null if field is missing 007', () => {
-		const extractor = F007(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F007(toxmljsFormat(record1), toxmljsFormat(record2));
 		const label = extractor.check();
 
 		expect(label).to.equal(null);
@@ -61,7 +64,7 @@ describe('F007', () => {
 		record1.appendField(Utils.stringToField('007    |||||||||mul||'));
 		record2.appendField(Utils.stringToField('007    |||||||||mul||'));
 
-		const extractor = F007(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F007(toxmljsFormat(record1), toxmljsFormat(record2));
 		const label = extractor.check();
 
 		expect(label).to.equal(Labels.SURE);
@@ -71,7 +74,7 @@ describe('F007', () => {
 		record1.appendField(Utils.stringToField('007    X||||||||mul||'));
 		record2.appendField(Utils.stringToField('007    |||||||||mul||'));
 
-		const extractor = F007(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F007(toxmljsFormat(record1), toxmljsFormat(record2));
 		const label = extractor.check();
 
 		expect(label).to.equal(Labels.SURELY_NOT);

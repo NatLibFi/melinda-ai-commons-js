@@ -36,7 +36,7 @@ const extractors = require('./extractors');
 
 MarcRecord.setValidationOptions({subfieldValues: false});
 
-describe('extractors', () => {
+describe('preference/extractors', () => {
 	let testRecord;
 
 	beforeEach(() => {
@@ -99,9 +99,11 @@ describe('extractors', () => {
 			if (userName.substr(0, 5) === 'LOAD-') {
 				return false;
 			}
+
 			if (userName.substr(0, 5) === 'CONV-') {
 				return false;
 			}
+
 			return true;
 		}
 

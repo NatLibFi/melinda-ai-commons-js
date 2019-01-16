@@ -28,26 +28,24 @@
 
 /* eslint-disable no-unused-expressions */
 
-const chai = require('chai');
+import {expect} from 'chai';
+import {MarcRecord} from '@natlibfi/marc-record';
 
-const expect = chai.expect;
-
-const {Labels} = require('./constants');
+import {Labels} from './constants';
+import publisher from './feature-publisher';
+import * as Utils from './utils';
 
 const {SURE, SURELY_NOT, ALMOST_SURE} = Labels;
 
-const {MarcRecord} = require('@natlibfi/marc-record');
-const Utils = require('./utils');
+MarcRecord.setValidationOptions({subfieldValues: false});
 
-const publisher = require('./feature-publisher');
-
-describe('feature-publisher', () => {
+describe('similarity/feature-extractors/feature-publisher', () => {
 	let record1;
 	let record2;
 
 	beforeEach(() => {
-		record1 = new MarcRecord();
-		record2 = new MarcRecord();
+		record1 = new MarcRecord({fields: [{tag: '001', value: '12345'}]});
+		record2 = new MarcRecord({fields: [{tag: '001', value: '56780'}]});
 	});
 
 	function primeRecords(strForRec1, strForRec2) {
@@ -105,39 +103,40 @@ describe('feature-publisher', () => {
 		);
 		expect(runExtractor()).to.eql([SURE, SURE, SURE, null, null, null]);
 	});
-});
 
-function toWeirdFormat(record) {
-	return {
-		controlfield: record.getControlfields().map(convertControlField),
-		datafield: record.getDatafields().map(convertDataField)
-	};
-
-	function convertControlField(field) {
+	function toWeirdFormat(record) {
 		return {
-			$: {
-				tag: field.tag
-			},
-			_: field.value
-		};
-	}
-	function convertDataField(field) {
-		return {
-			$: {
-				tag: field.tag,
-				ind1: field.ind1,
-				ind2: field.ind2
-			},
-			subfield: field.subfields.map(convertSubfield)
+			controlfield: record.getControlfields().map(convertControlField),
+			datafield: record.getDatafields().map(convertDataField)
 		};
 
-		function convertSubfield(subfield) {
+		function convertControlField(field) {
 			return {
 				$: {
-					code: subfield.code
+					tag: field.tag
 				},
-				_: subfield.value
+				_: field.value
 			};
 		}
+
+		function convertDataField(field) {
+			return {
+				$: {
+					tag: field.tag,
+					ind1: field.ind1,
+					ind2: field.ind2
+				},
+				subfield: field.subfields.map(convertSubfield)
+			};
+
+			function convertSubfield(subfield) {
+				return {
+					$: {
+						code: subfield.code
+					},
+					_: subfield.value
+				};
+			}
+		}
 	}
-}
+});

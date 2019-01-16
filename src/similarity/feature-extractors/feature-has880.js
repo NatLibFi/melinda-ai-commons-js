@@ -55,6 +55,7 @@ function has880(record1, record2) {
 		if (set1.length !== 0 || set2.length !== 0) {
 			return Labels.ABSOLUTELY_NOT_DOUBLE;
 		}
+
 		return null;
 	}
 

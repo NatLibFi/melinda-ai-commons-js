@@ -94,6 +94,7 @@ function sarjat(record1, record2) {
 				return identical;
 			}
 		};
+
 		// This will prevent the normalization of fields and subfields into sets, so that comparator can compare marc fields as marc fields instead of sets of strings.
 		wholeFieldComparator.options = {
 			noNormalization: true

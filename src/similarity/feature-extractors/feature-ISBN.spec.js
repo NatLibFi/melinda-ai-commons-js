@@ -35,10 +35,13 @@ const expect = chai.expect;
 const {Labels} = require('./constants');
 const {MarcRecord} = require('@natlibfi/marc-record');
 const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const ISBN = require('./feature-ISBN');
 
-describe('ISBN', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/ISBN', () => {
 	let record1;
 	let record2;
 
@@ -56,7 +59,7 @@ describe('ISBN', () => {
 		it('should return null if either is missing ISBN', () => {
 			record1.appendField(Utils.stringToField('020    ‡a951-643-753-2'));
 
-			const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(null);
@@ -66,7 +69,7 @@ describe('ISBN', () => {
 			record1.appendField(Utils.stringToField('020    ‡a951-643-753-2'));
 			record2.appendField(Utils.stringToField('020    ‡a951-643-753-2'));
 
-			const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.SURE);
@@ -76,7 +79,7 @@ describe('ISBN', () => {
 			record1.appendField(Utils.stringToField('020    ‡a951-643-753-2'));
 			record2.appendField(Utils.stringToField('020    ‡z951-643-753-2'));
 
-			const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.SURE);
@@ -86,7 +89,7 @@ describe('ISBN', () => {
 			record1.appendField(Utils.stringToField('020    ‡a978951-643-7531'));
 			record2.appendField(Utils.stringToField('020    ‡a951-643-753-2'));
 
-			const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.SURE);
@@ -99,7 +102,7 @@ describe('ISBN', () => {
 			record2.appendField(Utils.stringToField('020    ‡a951-643-753-2'));
 			record2.appendField(Utils.stringToField('020    ‡a978951-643-6666'));
 
-			const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.MAYBE);
@@ -109,7 +112,7 @@ describe('ISBN', () => {
 			record1.appendField(Utils.stringToField('020    ‡a978-0-7680-5723-2'));
 			record2.appendField(Utils.stringToField('020    ‡a0-7680-5723-X'));
 
-			const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.SURE);
@@ -119,7 +122,7 @@ describe('ISBN', () => {
 			record1.appendField(Utils.stringToField('020    ‡a978-0-7680-5723-2'));
 			record2.appendField(Utils.stringToField('020    ‡a978-0-7680-5723-3'));
 
-			const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+			const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 			const label = extractor.check();
 
 			expect(label).to.equal(Labels.SURE);
@@ -133,7 +136,7 @@ describe('ISBN', () => {
 		record2.appendField(Utils.stringToField('008    010608s1971^^^^fi^ppz||||||||||||||mul||'));
 		record2.appendField(Utils.stringToField('020    ‡a951-643-753-2'));
 
-		const extractor = ISBN(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = ISBN(toxmljsFormat(record1), toxmljsFormat(record2));
 		const label = extractor.check();
 
 		expect(label).to.equal(null);

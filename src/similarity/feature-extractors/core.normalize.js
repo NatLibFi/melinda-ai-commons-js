@@ -71,10 +71,12 @@ export function removediacs(fields, options) {
 	applyToFieldValues(fields, removeDiacritics, options);
 	return fields;
 }
+
 export function utf8norm(fields, options) {
 	applyToFieldValues(fields, utf8normString, options);
 	return fields;
 }
+
 export function romanToArabic(fields, options) {
 	applyToFieldValues(fields, romanToArabicConversion, options);
 	return fields;
@@ -87,6 +89,7 @@ export function romanToArabicConversion(str) {
 		if (word === '') {
 			return '';
 		}
+
 		if (word === word.toLowerCase()) {
 			return word;
 		}
@@ -137,9 +140,11 @@ export function onlyYearNumbers(fields, options) {
 		if (str.length !== 4) {
 			return false;
 		}
+
 		if (isNaN(str)) {
 			return false;
 		}
+
 		const number = parseInt(str, 10);
 
 		return number < 2100 && number > 1000;
@@ -152,6 +157,7 @@ export function removeEmpty(fields) {
 			if (subfield._ === undefined || subfield._ === null) {
 				return false;
 			}
+
 			return subfield._ !== '';
 		});
 	});
@@ -172,6 +178,7 @@ export function applyToFieldValues(fields, func, options) {
 				if (subfield._ === undefined) {
 					return;
 				}
+
 				if (options.subcode === undefined || options.subcode === subfield.$.code) {
 					subfield._ = func(subfield._, subfield.$.code);
 				}
@@ -322,6 +329,7 @@ export function removeDiacritics(str) {
 		const letter = letters[i];
 		newStr += letter in diacriticsMap ? diacriticsMap[letter] : letter;
 	}
+
 	return newStr;
 }
 

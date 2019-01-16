@@ -38,23 +38,30 @@ const {SURE, SURELY_NOT, ALMOST_SURE} = Labels;
 
 const {MarcRecord} = require('@natlibfi/marc-record');
 const Utils = require('./utils');
+const {toxmljsFormat} = require('../utils');
 
 const F008 = require('./feature-F008');
 
-describe('F008', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/F008', () => {
 	let record1;
 	let record2;
 
 	beforeEach(() => {
-		record1 = new MarcRecord();
-		record2 = new MarcRecord();
+		record1 = new MarcRecord({
+			leader: '^^^^^ccm^a22004934i^4500',
+			fields: [{tag: '001', value: '12345'}]
+		});
 
-		record1.leader = '^^^^^ccm^a22004934i^4500';
-		record2.leader = '^^^^^ccm^a22004934i^4500';
+		record2 = new MarcRecord({
+			leader: '^^^^^ccm^a22004934i^4500',
+			fields: [{tag: '001', value: '67890'}]
+		});
 	});
 
 	it('should return null if field is missing 008', () => {
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const label = extractor.check();
 
 		expect(label).to.eql([null, null, null, null, null, null, null, null, null]);
@@ -64,7 +71,7 @@ describe('F008', () => {
 		record1.appendField(Utils.stringToField('008    010608s20002000fi^ppzaaaaaaaaaaaaaamulaa'));
 		record2.appendField(Utils.stringToField('008    010608s20002000fi^ppzaaaaaaaaaaaaaamulaa'));
 
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql([SURE, SURE, SURE, SURE, SURE, SURE, SURE, SURE, SURE]);
@@ -74,7 +81,7 @@ describe('F008', () => {
 		record1.appendField(Utils.stringToField('008    ^^^^^^|||||^^^^^^^||||||||||||||||||||||'));
 		record2.appendField(Utils.stringToField('008    010608s20002000fi^ppzaaaaaaaaaaaaaamulaa'));
 
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql([null, null, null, null, null, null, null, null, null]);
@@ -84,7 +91,7 @@ describe('F008', () => {
 		record1.appendField(Utils.stringToField('008    010608s2000^^^^fi^ppz||||||||||||||mul||'));
 		record2.appendField(Utils.stringToField('008    010602s2000^^^^xxuppz||||||||||||||mul||'));
 
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql([SURELY_NOT, SURE, SURE, null, SURELY_NOT, SURE, null, null, SURE]);
@@ -94,7 +101,7 @@ describe('F008', () => {
 		record1.appendField(Utils.stringToField('008    010608s2000^^^^fi^ppz|||xxxxxxx||||mul||'));
 		record2.appendField(Utils.stringToField('008    010602s2000^^^^xxuppz|||zxxxxxx||||mul||'));
 
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql([SURELY_NOT, SURE, SURE, null, SURELY_NOT, SURE, null, null, 0.75]);
@@ -105,7 +112,7 @@ describe('F008', () => {
 		record1.appendField(Utils.stringToField('008    010608s2000^^^^fi^ppz|||x||||||||||mul||'));
 		record2.appendField(Utils.stringToField('008    010602s2000^^^^xxuppz||||||||||||||mul||'));
 
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql([SURELY_NOT, SURE, SURE, null, SURELY_NOT, SURE, null, null, null]);
@@ -116,7 +123,7 @@ describe('F008', () => {
 		record1.appendField(Utils.stringToField('008    010608s2000^^^^fi^ppz|||x||||||||||mul||'));
 		record2.appendField(Utils.stringToField('008    010602s2000^^^^xx^ppz|||x||||||||||mul||'));
 
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql([SURELY_NOT, SURE, SURE, null, ALMOST_SURE, SURE, null, null, null]);
@@ -127,7 +134,7 @@ describe('F008', () => {
 		record1.appendField(Utils.stringToField('008    901221s1978^^^^xx^|||||||||||||||||fin||'));
 		record2.appendField(Utils.stringToField('008    790410s1978^^^^fi^|||||||||||||||f|fin||'));
 
-		const extractor = F008(Utils.toxmljsFormat(record1), Utils.toxmljsFormat(record2));
+		const extractor = F008(toxmljsFormat(record1), toxmljsFormat(record2));
 		const labels = extractor.check();
 
 		expect(labels).to.eql([SURELY_NOT, SURE, SURE, null, ALMOST_SURE, SURE, null, null, null]);

@@ -57,6 +57,7 @@ export function isSubset(set1, set2, equalFunc) {
 		if (equalFuncOptions.noNormalization) {
 			return setDifference(set1, set2, equalFunc).length === 0;
 		}
+
 		return setDifference(fieldSetToString(set1, equalFuncOptions), fieldSetToString(set2, equalFuncOptions), equalFunc).length === 0;
 	}
 
@@ -75,6 +76,7 @@ export function hasIntersection(set1, set2, equalFunc) {
 		const equalFuncOptions = equalFunc.options || {nosubcode: true};
 		return setDifference(fieldSetToString(set1, equalFuncOptions), fieldSetToString(set2, equalFuncOptions), equalFunc).length !== fieldSetToString(set1).length;
 	}
+
 	return setDifference(fieldSetToString(set1), fieldSetToString(set2), equalFunc).length !== fieldSetToString(set1).length;
 }
 
@@ -95,6 +97,7 @@ export function setContains(array, item, equalFunc) {
 			return a === b;
 		};
 	}
+
 	let i = 0;
 
 	let length = array.length;
@@ -103,6 +106,7 @@ export function setContains(array, item, equalFunc) {
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -133,6 +137,7 @@ export function abbrComparator(str1, str2) {
 	if (arr1.length !== arr2.length) {
 		return false;
 	}
+
 	let i = 0;
 
 	let length = arr1.length;
@@ -143,6 +148,7 @@ export function abbrComparator(str1, str2) {
 			return false;
 		}
 	}
+
 	return true;
 
 	function eq(str1, str2) {
@@ -153,8 +159,10 @@ export function abbrComparator(str1, str2) {
 		if (str1.length === 1 || str2.length === 1) {
 			return str1.substr(0, 1) === str2.substr(0, 1);
 		}
+
 		return str1 === str2;
 	}
+
 	function has(arr, item) {
 		let i = 0;
 
@@ -165,6 +173,7 @@ export function abbrComparator(str1, str2) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 }
@@ -176,6 +185,7 @@ export function longestItem(arr) {
 			length = arr[i].length;
 		}
 	}
+
 	return length;
 }
 
@@ -199,23 +209,29 @@ export function distanceComparator(maxDistance) {
 			const n2 = parseInt(num2, 10);
 			return Math.abs(n1 - n2) <= maxDistance;
 		}
+
 		return false;
 	};
 }
+
 export function skipSmallerThan(num) {
 	return function (num1, num2) {
 		if (isInt(num1) && isInt(num2)) {
 			if (num1 < num) {
 				return false;
 			}
+
 			if (num2 < num) {
 				return false;
 			}
+
 			return num1 === num2;
 		}
+
 		return false;
 	};
 }
+
 export function isInt(x) {
 	const y = parseInt(x, 10);
 	return !isNaN(y) && x === y && x.toString() === y.toString();
@@ -242,6 +258,7 @@ export function stringPartofComparatorRatio(ratio) {
 		if (strLengthRatio >= ratio) {
 			return stringPartofComparator(str1, str2);
 		}
+
 		return false;
 	};
 }

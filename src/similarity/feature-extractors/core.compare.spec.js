@@ -33,7 +33,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const compareFuncs = require('./core.compare');
 
-describe('Compare', () => {
+describe('similarity/feature-extractors/compare', () => {
 	describe('stringJaccard', () => {
 		const stringJaccard = compareFuncs.stringJaccard;
 

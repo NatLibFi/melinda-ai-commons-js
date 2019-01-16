@@ -39,6 +39,7 @@ export function stringSelector(selector, record) {
 		while (selector.length < 5) {
 			selector += '.';
 		}
+
 		// Tag selector
 		let res = [];
 
@@ -65,6 +66,7 @@ function hTag(selector) {
 				res.push(field);
 			}
 		}
+
 		return res;
 	};
 }

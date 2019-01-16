@@ -30,7 +30,7 @@ import _ from 'lodash';
 import {Network} from 'synaptic';
 import {generateFeatures, generateFeatureVector, normalizeFeatureVectors} from './utils';
 
-export function createService(model, extractorSet) {
+export function createService({model, extractorSet}) {
 	const network = Network.fromJSON(model);
 
 	return {find};

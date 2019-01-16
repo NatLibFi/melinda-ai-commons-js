@@ -68,6 +68,7 @@ export function encodingLevel(record) {
 	if (['3', '8'].indexOf(encodingLevel) !== -1) {
 		return 1;
 	}
+
 	return 0;
 }
 
@@ -80,6 +81,7 @@ export function fenniOrNotLDR(record) {
 	if (encodingLevel === '8') {
 		return -1;
 	}
+
 	return encodingLevel === '^' ? 1 : 0;
 }
 
@@ -132,6 +134,7 @@ export function nonFinnishHELKA(record) {
 			return 1;
 		}
 	}
+
 	return 0;
 }
 
@@ -142,6 +145,7 @@ export function specificSingleLocalOwner(localOwnerTag) {
 		if (localOwnerFields.length === 1 && localOwnerFields[0] === localOwnerTag.toUpperCase()) {
 			return 1;
 		}
+
 		return 0;
 	};
 }
@@ -311,6 +315,7 @@ export function latestChange(nameFilterFunction) {
 			if (changeEntry.user === undefined) {
 				return false;
 			}
+
 			return nameFilterFunction(changeEntry.user);
 		});
 
@@ -327,6 +332,7 @@ export function latestChange(nameFilterFunction) {
 		if (humanChangeLog.length > 0) {
 			return humanChangeLog[0].date + humanChangeLog[0].time;
 		}
+
 		// Default to field 005
 		const f005 = _.head(record.fields.filter(tagFilter('005')));
 		const value = _.get(f005, 'value', '0');
@@ -343,6 +349,7 @@ export function field008nonEmptyCount(record) {
 	if (value === undefined) {
 		return 0;
 	}
+
 	return value.split('')
 		.filter(c => c !== '|')
 		.filter(c => c !== '^')
@@ -372,11 +379,14 @@ function controlfieldPosition(tag, index, count) {
 			for (let i = 0; i < count; i++) {
 				returnValue += '|';
 			}
+
 			return returnValue;
 		}
+
 		if (field.value.length < index) {
 			return undefined;
 		}
+
 		return field.value.substr(index, count);
 	};
 }
@@ -405,6 +415,7 @@ function localOwnerList(record) {
 				return b_subfields[0].value;
 			}
 		}
+
 		return undefined;
 	});
 
@@ -412,6 +423,7 @@ function localOwnerList(record) {
 		if (item !== undefined && item !== null) {
 			memo.push(item);
 		}
+
 		return memo;
 	}, []);
 

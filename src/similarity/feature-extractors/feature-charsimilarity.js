@@ -92,6 +92,7 @@ function isDescriptiveField(field) {
 	if (nonDescriptiveFields.indexOf(field.$.tag) !== -1) {
 		return false;
 	}
+
 	return true;
 }
 

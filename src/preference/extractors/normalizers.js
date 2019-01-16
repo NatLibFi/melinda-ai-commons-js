@@ -54,6 +54,7 @@ export function moreRecent(maxAge, requiredAgeDifference) {
 		if (age(dateA) < maxAge && age(dateB) < maxAge) {
 			return age(dateA) < age(dateB) ? 1 : 0;
 		}
+
 		if (age(dateA) < maxAge) {
 			return 1;
 		}
@@ -66,9 +67,11 @@ export function reprint(a, b) {
 	if (b.notesOnReprints.some(note => note.includes(a.year))) {
 		return 0;
 	}
+
 	if (a.notesOnReprints.some(note => note.includes(b.year))) {
 		return 1;
 	}
+
 	return 0;
 }
 
@@ -80,6 +83,7 @@ function parseDate(currentYear, str) {
 		year = year > currentYear % 100 ? year + 1900 : year + 2000;
 		return {year, month};
 	}
+
 	const year = parseInt(str.substr(0, 4), 10);
 	const month = parseInt(str.substr(2, 2), 10);
 	return {year, month};

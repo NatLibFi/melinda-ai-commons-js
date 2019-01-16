@@ -41,7 +41,9 @@ const Utils = require('./utils');
 
 const createExtractor = require('./feature-F028');
 
-describe('feature-F028', () => {
+MarcRecord.setValidationOptions({subfieldValues: false});
+
+describe('similarity/feature-extractors/feature-F028', () => {
 	let record1;
 	let record2;
 
@@ -132,6 +134,7 @@ function toWeirdFormat(record) {
 			_: field.value
 		};
 	}
+
 	function convertDataField(field) {
 		return {
 			$: {

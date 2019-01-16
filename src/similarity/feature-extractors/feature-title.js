@@ -116,6 +116,7 @@ export default function (record1, record2) {
 					subfield._ = withoutStopWords;
 				}
 			}
+
 			return subfield;
 		});
 		return field;
@@ -170,6 +171,7 @@ export default function (record1, record2) {
 				return Labels.ABSOLUTELY_NOT_DOUBLE;
 			}
 		}
+
 		// Necessary checks for n-subfield has been done, remove it from poisoning the rest of checks,
 		// since it is hard to normalize because of it's many formats.
 		set1.forEach(removeSubfields('n'));
@@ -274,10 +276,12 @@ export default function (record1, record2) {
 		}).join(' ');
 		return str;
 	}
+
 	function isYear(str) {
 		if (str.length !== 4) {
 			return false;
 		}
+
 		if (isNaN(str)) {
 			return false;
 		}
@@ -299,6 +303,7 @@ export default function (record1, record2) {
 		if (char === '' || char === ' ') {
 			return false;
 		}
+
 		return !isNaN(char);
 	}
 
@@ -349,6 +354,7 @@ export default function (record1, record2) {
 			};
 		});
 	}
+
 	function abbrSubfield(subCode) {
 		return function (field) {
 			field.subfield.forEach(subfield => {
@@ -357,10 +363,12 @@ export default function (record1, record2) {
 				}
 			});
 		};
+
 		function abbr(str) {
 			if (isNaN(str[0])) {
 				return str[0];
 			}
+
 			return str;
 		}
 	}
