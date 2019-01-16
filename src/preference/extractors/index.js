@@ -4,7 +4,7 @@
 *
 * AI modules for Melinda's applications
 *
-* Copyright (c) 2017-2018 University Of Helsinki (The National Library Of Finland)
+* Copyright (c) 2017-2019 University Of Helsinki (The National Library Of Finland)
 *
 * This file is part of melinda-ai-commons-js
 *
