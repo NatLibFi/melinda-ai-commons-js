@@ -26,11 +26,13 @@
 *
 */
 
+import createDebugLogger from 'debug';
 import {Network} from 'synaptic';
 import {pairToInputVector} from './utils';
 import {bibDefault as strategy} from './strategy';
 
 const IS_DUPLICATE_THRESHOLD = 0.9;
+const NOT_DUPLICATE_TRESHOLD = 0.65;
 
 export const ServiceStatus = {
 	IS_DUPLICATE: 'IS_DUPLICATE',
@@ -39,6 +41,7 @@ export const ServiceStatus = {
 };
 
 export function createService({model}) {
+	const debug = createDebugLogger('@natlibfi/melinda-ai-commons:similarity');
 	const duplicateNetwork = Network.fromJSON(model);
 
 	return {check};
@@ -57,7 +60,9 @@ export function createService({model}) {
 		};
 
 		function classifyResult(validationResult) {
-			if (validationResult < 0.65) {
+			debug(`Numeric probability: ${validationResult}`);
+
+			if (validationResult < NOT_DUPLICATE_TRESHOLD) {
 				return ServiceStatus.NOT_DUPLICATE;
 			}
 
