@@ -59,14 +59,14 @@ export function createService({model}) {
 			hasNegativeFeatures
 		};
 
-		function classifyResult(validationResult) {
-			debug(`Numeric probability: ${validationResult}`);
+		function classifyResult(probability) {
+			debug(`Numeric probability: ${probability}`);
 
-			if (validationResult < NOT_DUPLICATE_TRESHOLD) {
+			if (probability < NOT_DUPLICATE_TRESHOLD) {
 				return ServiceStatus.NOT_DUPLICATE;
 			}
 
-			if (validationResult > IS_DUPLICATE_THRESHOLD) {
+			if (probability > IS_DUPLICATE_THRESHOLD) {
 				return ServiceStatus.IS_DUPLICATE;
 			}
 

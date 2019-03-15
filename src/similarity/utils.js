@@ -26,9 +26,12 @@
  *
  **/
 
+import createDebugLogger from 'debug';
 import _ from 'lodash';
 import {MarcRecord} from '@natlibfi/marc-record';
 import * as Extractors from './feature-extractors';
+
+const debug = createDebugLogger('@natlibfi/melinda-ai-commons/similarity');
 
 export function toxmljsFormat(marcRecord) {
 	const xmljsFormat = {
