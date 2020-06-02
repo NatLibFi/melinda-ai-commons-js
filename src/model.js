@@ -26,8 +26,8 @@
 *
 */
 
-import {bibDuplicateDetection} from './config/bib-duplicate-detection-model';
-import {bibPreference} from './config/bib-preference-model';
+import BibDuplicateDetectionModel from './config/bib-duplicate-detection-model';
+import BibPreferenceModel from './config/bib-preference-model';
 
-export const BibDuplicateDetection = bibDuplicateDetection;
-export const BibPreference = bibPreference;
+export const BibDuplicateDetection = BibDuplicateDetectionModel;
+export const BibPreference = BibPreferenceModel;
