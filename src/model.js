@@ -26,10 +26,8 @@
 *
 */
 
-import path from 'path';
-import fs from 'fs';
+import {bibDuplicateDetection} from './config/bib-duplicate-detection-model';
+import {bibPreference} from './config/bib-preference-model';
 
-const CONFIG_PATH = path.join(__dirname, 'config');
-
-export const BibDuplicateDetection = JSON.parse(fs.readFileSync(path.join(CONFIG_PATH, 'bib-duplicate-detection-model.json'), 'utf8'));
-export const BibPreference = JSON.parse(fs.readFileSync(path.join(CONFIG_PATH, 'bib-preference-model.json'), 'utf8'));
+export const BibDuplicateDetection = bibDuplicateDetection;
+export const BibPreference = bibPreference;
