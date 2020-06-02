@@ -76,6 +76,7 @@ export function reprint(a, b) {
 }
 
 function parseDate(currentYear, str) {
+	// Format YYMMDD
 	if (str.length === 6) {
 		let year = parseInt(str.substr(0, 2), 10);
 		const month = parseInt(str.substr(2, 2), 10);
@@ -84,7 +85,8 @@ function parseDate(currentYear, str) {
 		return {year, month};
 	}
 
+	// Format YYYYMMDD
 	const year = parseInt(str.substr(0, 4), 10);
-	const month = parseInt(str.substr(2, 2), 10);
+	const month = parseInt(str.substr(4, 6), 10);
 	return {year, month};
 }

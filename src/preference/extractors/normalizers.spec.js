@@ -43,7 +43,7 @@ describe('preference/normalizers', () => {
 			it('should return 1 if first record is more recent', () => {
 				const recent = moreRecent(2, 0);
 
-				expect(recent('170706', '170606')).to.equal(1);
+				expect(recent('190706', '190606')).to.equal(1);
 			});
 
 			it('should return 0 if second record is more recent', () => {
@@ -62,7 +62,7 @@ describe('preference/normalizers', () => {
 		it('should handle YYMMDD format', () => {
 			const recent = moreRecent(2, 1);
 
-			expect(recent('170606', '991206')).to.equal(1);
+			expect(recent('190606', '991206')).to.equal(1);
 		});
 	});
 });
